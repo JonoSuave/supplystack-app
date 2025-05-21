@@ -8,7 +8,7 @@ import { z } from 'zod';
 // Define the type for the sync status response
 export type SyncStatusResponse = {
   syncId: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  status: 'pending' | 'in_progress' | 'completed' | 'failed' | 'canceled';
   startedAt: string;
   completedAt?: string;
   materialsCount?: number;
@@ -120,6 +120,66 @@ export async function checkSyncStatus(syncId: string): Promise<SyncStatusRespons
   } catch (error) {
     console.error('Error checking sync status:', error);
     throw new Error(`Failed to check sync status: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+/**
+ * Cancel an in-progress sync operation
+ * @param syncId The ID of the sync operation to cancel
+ */
+export async function cancelSync(syncId: string): Promise<{ success: boolean; message: string }> {
+  try {
+    // Validate the sync ID
+    const { syncId: validatedSyncId } = syncIdSchema.parse({ syncId });
+    
+    // First, check if the sync is in a state that can be canceled
+    const { data: syncData, error: checkError } = await supabase
+      .from('sync_status')
+      .select('status')
+      .eq('sync_id', validatedSyncId)
+      .single();
+    
+    if (checkError) {
+      throw new Error(`Failed to check sync status: ${checkError.message}`);
+    }
+    
+    if (!syncData) {
+      throw new Error(`Sync with ID ${validatedSyncId} not found`);
+    }
+    
+    // Only allow canceling if the sync is pending or in progress
+    if (syncData.status !== 'pending' && syncData.status !== 'in_progress') {
+      return {
+        success: false,
+        message: `Cannot cancel sync in ${syncData.status} state`
+      };
+    }
+    
+    // Update the sync status to canceled
+    const { error: updateError } = await supabase
+      .from('sync_status')
+      .update({ 
+        status: 'canceled',
+        completed_at: new Date().toISOString(),
+        error_message: 'Sync was canceled by user'
+      })
+      .eq('sync_id', validatedSyncId);
+    
+    if (updateError) {
+      throw new Error(`Failed to cancel sync: ${updateError.message}`);
+    }
+    
+    // Revalidate relevant paths to update UI
+    revalidatePath('/');
+    revalidatePath('/materials');
+    
+    return {
+      success: true,
+      message: 'Sync canceled successfully'
+    };
+  } catch (error) {
+    console.error('Error canceling sync:', error);
+    throw new Error(`Failed to cancel sync: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 

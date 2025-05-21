@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Check, AlertCircle } from 'lucide-react';
+import { RefreshCw, Check, AlertCircle, XCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { triggerSync, checkSyncStatus, getLatestSyncStatus, SyncStatusResponse } from '@/app/actions/materials/sync';
+import { triggerSync, checkSyncStatus, getLatestSyncStatus, cancelSync, SyncStatusResponse } from '@/app/actions/materials/sync';
 
 interface SyncButtonProps {
   variant?: 'default' | 'outline' | 'ghost';
@@ -118,28 +118,89 @@ export default function SyncButton({ variant = 'default', size = 'default', clas
       setSyncing(false);
     }
   };
+  
+  // Handle cancel button click
+  const handleCancel = async () => {
+    if (!syncId) return;
+    
+    try {
+      const result = await cancelSync(syncId);
+      
+      if (result.success) {
+        toast({
+          title: "Sync canceled",
+          description: "The sync process has been canceled.",
+          variant: "default",
+        });
+        
+        // Stop polling and reset state
+        if (pollingInterval) {
+          clearInterval(pollingInterval);
+          setPollingInterval(null);
+        }
+        setSyncing(false);
+        
+        // Update status to show canceled
+        if (syncStatus) {
+          setSyncStatus({
+            ...syncStatus,
+            status: 'canceled',
+            completedAt: new Date().toISOString()
+          });
+        }
+      } else {
+        toast({
+          title: "Unable to cancel",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error canceling sync:', error);
+      toast({
+        title: "Cancel failed",
+        description: `Failed to cancel sync: ${error instanceof Error ? error.message : String(error)}`,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col">
-      <Button
-        variant={variant}
-        size={size}
-        className={`${className} flex items-center gap-2`}
-        onClick={handleSync}
-        disabled={syncing}
-      >
-        {syncing ? (
-          <>
-            <RefreshCw className="h-4 w-4 animate-spin" />
-            <span>Syncing... {progress > 0 ? `${progress}%` : ''}</span>
-          </>
-        ) : (
-          <>
-            <RefreshCw className="h-4 w-4" />
-            <span>Sync Materials</span>
-          </>
+      <div className="flex items-center gap-2">
+        <Button
+          variant={variant}
+          size={size}
+          className={`${className} flex items-center gap-2`}
+          onClick={handleSync}
+          disabled={syncing}
+        >
+          {syncing ? (
+            <>
+              <RefreshCw className="h-4 w-4 animate-spin" />
+              <span>Syncing... {progress > 0 ? `${progress}%` : ''}</span>
+            </>
+          ) : (
+            <>
+              <RefreshCw className="h-4 w-4" />
+              <span>Sync Materials</span>
+            </>
+          )}
+        </Button>
+        
+        {/* Cancel button - only shown during active sync */}
+        {syncing && syncId && (
+          <Button 
+            variant="outline" 
+            size={size} 
+            className="flex items-center gap-1 border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600" 
+            onClick={handleCancel}
+          >
+            <XCircle className="h-4 w-4" />
+            <span>Cancel</span>
+          </Button>
         )}
-      </Button>
+      </div>
       
       {syncStatus?.completedAt && syncStatus.status === 'completed' && (
         <div className="text-xs text-muted-foreground mt-1 flex items-center">
@@ -152,6 +213,13 @@ export default function SyncButton({ variant = 'default', size = 'default', clas
         <div className="text-xs text-destructive mt-1 flex items-center">
           <AlertCircle className="h-3 w-3 mr-1" />
           Sync failed
+        </div>
+      )}
+      
+      {syncStatus?.status === 'canceled' && (
+        <div className="text-xs text-amber-500 mt-1 flex items-center">
+          <XCircle className="h-3 w-3 mr-1" />
+          Sync canceled at {syncStatus.completedAt ? formatLastSynced(syncStatus.completedAt) : ''}
         </div>
       )}
     </div>
