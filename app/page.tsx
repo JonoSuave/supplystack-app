@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import HomeSearchBar from "@/components/HomeSearchBar";
+import SyncButton from "@/components/SyncButton";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
             Contact
           </Link>
           <div className="flex items-center space-x-4">
+            <SyncButton size="sm" variant="outline" className="mr-2" />
             <SignInButton mode="modal">
               <button className="bg-golden-yellow hover:bg-amber-500 text-white px-4 py-2 rounded-md font-medium transition-colors">
                 Sign In

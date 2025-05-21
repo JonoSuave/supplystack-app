@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SupabaseProvider } from "@/components/SupabaseProvider";
+import { ToastProvider } from "@/components/ToastProvider";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -50,6 +51,7 @@ export default function RootLayout({
             <main className="min-h-screen">
               {children}
             </main>
+            <ToastProvider />
           </SupabaseProvider>
         </body>
       </html>
