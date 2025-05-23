@@ -1,0 +1,62 @@
+[
+  {
+    "products": [
+      {
+        "url": "https://www.homedepot.com/p/ProWood-2-in-x-4-in-x-4-ft-2-Premium-Grade-Dimensional-Lumber-271736/300524962",
+        "price": null,
+        "stock": "0 in stock",
+        "product_id": "300524962",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/6e8167f9-7bdc-4fdf-b0b2-2a5c8fbb2f75/svn/prowood-framing-lumber-271736-64_600.jpg"
+      },
+      {
+        "url": "https://www.homedepot.com/p/2-in-x-12-in-x-8-ft-2-Premium-Grade-Fir-Dimensional-Lumber-707195/202094201",
+        "price": null,
+        "stock": "0 in stock",
+        "product_id": "202094201",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/bc27550b-6f70-4911-8e60-3f7c8f0aed7a/svn/framing-lumber-707195-64_100.jpg"
+      },
+      {
+        "url": "https://www.homedepot.com/p/WeatherShield-2-in-x-4-in-x-8-ft-1-Ground-Contact-Pressure-Treated-Southern-Yellow-Pine-Lumber-253941/206966018",
+        "price": null,
+        "stock": "0 in stock",
+        "product_id": "206966018",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/36764c7c-5cfb-417e-a34e-3d35d6aa1a33/svn/brown-weathershield-pressure-treated-lumber-253941-64_100.jpg"
+      },
+      {
+        "url": "https://www.homedepot.com/p/2-in-x-10-in-x-12-ft-1-Ground-Contact-Pressure-Treated-Southern-Yellow-Pine-Lumber-106001/206937514",
+        "price": null,
+        "stock": "0 in stock",
+        "product_id": "206937514",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/b07f4622-65f9-411e-b6bf-ff4b3ee01479/svn/brown-pressure-treated-lumber-106001-64_100.jpg"
+      },
+      {
+        "url": "https://www.homedepot.com/p/2-in-x-4-in-x-3-ft-Premium-Southern-Yellow-Pine-Dimensional-Lumber-3-Pack-407691/312560570",
+        "price": 9.98,
+        "stock": "32",
+        "product_id": "312560570",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/fa31f446-6cf8-4d91-bcab-397b408fe356/svn/framing-lumber-407691-64_600.jpg"
+      },
+      {
+        "url": "https://www.homedepot.com/p/2-in-x-4-in-x-8-ft-2-Premium-2-Grade-Fir-Dimensional-Lumber-441317/202094172",
+        "price": null,
+        "stock": "0 in stock",
+        "product_id": "202094172",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/d71f5e8d-102c-48f7-abd1-ba6a8988add3/svn/framing-lumber-441317-64_100.jpg"
+      },
+      {
+        "url": "https://www.homedepot.com/p/2-in-x-6-in-x-12-ft-1-Ground-Contact-Pressure-Treated-Southern-Yellow-Pine-Lumber-253905/206966029",
+        "price": null,
+        "stock": "0 in stock",
+        "product_id": "206966029",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/2e381efe-4251-4026-8ae4-70b5f25e3064/svn/brown-pressure-treated-lumber-253905-64_600.jpg"
+      },
+      {
+        "url": "https://www.homedepot.com/p/2-in-x-10-in-x-10-ft-2-Ground-Contact-Pressure-Treated-Southern-Yellow-Pine-Lumber-106153/206937521",
+        "price": null,
+        "stock": "0 in stock",
+        "product_id": "206937521",
+        "thumbnail_url": "https://images.thdstatic.com/productImages/af452f51-199a-4ce8-8694-f303c85b7489/svn/brown-pressure-treated-lumber-106153-64_100.jpg"
+      }
+    ]
+  }
+]
