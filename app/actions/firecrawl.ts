@@ -167,8 +167,8 @@ export async function crawlAndStoreMaterials(
     }
     return {
       success: false,
-      message: `Error during Firecrawl sync: ${error instanceof Error ? error.message : String(error)}`,
-      count: 0
+      message: `Error during Firecrawl sync: ${(error instanceof Error ? error.message : String(error))}`,
+      error: (error instanceof Error ? error.message : String(error)),
     };
   }
 }
@@ -193,7 +193,7 @@ export async function getMaterials() {
     console.error('Error in getMaterials:', error);
     return { 
       success: false, 
-      error: error.message,
+      error: (error instanceof Error ? error.message : String(error)),
       data: [] 
     };
   }

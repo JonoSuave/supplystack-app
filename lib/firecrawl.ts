@@ -67,6 +67,7 @@ export interface MaterialItem {
   };
   specifications?: Record<string, string>; // Additional material specifications
   images?: string[]; // URLs to material images
+  material_url?: string; // URL to the product page
   lastUpdated: string; // ISO date string
 }
 

@@ -31,6 +31,7 @@ interface MaterialSearchResult {
     quantity?: number;
   };
   images?: string[];
+  material_url?: string;
 }
 
 interface Location {
@@ -63,6 +64,7 @@ export default function SearchResults() {
       location: string;
       distance: string;
       imageUrl: string;
+      productUrl: string;
       lat: number;
       lng: number;
     }>
@@ -118,8 +120,8 @@ export default function SearchResults() {
           quantity: item.availability.quantity || 0,
           location: `${item.vendor.location.city}, ${item.vendor.location.state}`,
           distance: calculateDistance(),
-          // Always use local placeholder image to avoid next-image-unconfigured-host errors
-          imageUrl: "/placeholder.jpg",
+          imageUrl: (item.images && item.images.length > 0 && item.images[0]) ? item.images[0] : "/placeholder.jpg", // Use actual image if available, else placeholder
+          productUrl: item.material_url || '#', // Fallback to '#' if no URL
           lat: item.vendor.location.coordinates.latitude,
           lng: item.vendor.location.coordinates.longitude,
         })
@@ -165,6 +167,7 @@ export default function SearchResults() {
             location: 'Denver, CO',
             distance: `${(0.5 + Math.random() * 14.5).toFixed(1)} miles`,
             imageUrl: '/placeholder.jpg',
+            productUrl: '#', // Added placeholder product URL for mock data
             lat: 39.7392 + (Math.random() - 0.5) * 0.2,
             lng: -104.9903 + (Math.random() - 0.5) * 0.2,
           }));
@@ -407,65 +410,67 @@ export default function SearchResults() {
                       key={item.id}
                       className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col md:flex-row"
                     >
-                      <div className="md:w-24 md:h-24 mb-4 md:mb-0 md:mr-6">
-                        <Image
-                          src="/placeholder.jpg"
-                          alt={item.name}
-                          width={100}
-                          height={100}
-                          className="w-full h-full object-cover rounded-md"
-                        />
-                      </div>
-                      <div className="flex-grow">
-                        <div className="flex flex-col md:flex-row md:justify-between">
-                          <div>
-                            <h3 className="text-lg font-semibold text-dark-gray">
-                              {item.name}
-                            </h3>
-                            <p className="text-gray-600 mb-2">
-                              Vendor: {item.vendor}
-                            </p>
+                      <Link href={item.productUrl} target="_blank" rel="noopener noreferrer" className="w-full block">
+                          <div className="md:w-24 md:h-24 mb-4 md:mb-0 md:mr-6">
+                            <Image
+                              src={item.imageUrl}
+                              alt={item.name}
+                              width={100}
+                              height={100}
+                              className="w-full h-full object-cover rounded-md"
+                            />
                           </div>
-                          <div className="md:text-right">
-                            <p className="text-lg font-bold text-golden-yellow">
-                              ${item.price.toFixed(2)}
-                            </p>
-                            <p className="text-gray-600 text-sm">
-                              Quantity: {item.quantity} available
-                            </p>
+                          <div className="flex-grow">
+                            <div className="flex flex-col md:flex-row md:justify-between">
+                              <div>
+                                <h3 className="text-lg font-semibold text-dark-gray">
+                                  {item.name}
+                                </h3>
+                                <p className="text-gray-600 mb-2">
+                                  Vendor: {item.vendor}
+                                </p>
+                              </div>
+                              <div className="md:text-right">
+                                <p className="text-lg font-bold text-golden-yellow">
+                                  ${item.price.toFixed(2)}
+                                </p>
+                                <p className="text-gray-600 text-sm">
+                                  Quantity: {item.quantity} available
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex flex-col md:flex-row md:justify-between mt-2">
+                              <p className="text-gray-600 text-sm flex items-center">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  className="w-4 h-4 mr-1"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                  />
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                  />
+                                </svg>
+                                {item.location} ({item.distance})
+                              </p>
+                              <div className="mt-2 md:mt-0">
+                                <button className="bg-golden-yellow hover:bg-amber-500 text-white px-4 py-1 rounded text-sm font-medium transition-colors">
+                                  Contact Vendor
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col md:flex-row md:justify-between mt-2">
-                          <p className="text-gray-600 text-sm flex items-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              className="w-4 h-4 mr-1"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                              />
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
-                            </svg>
-                            {item.location} ({item.distance})
-                          </p>
-                          <div className="mt-2 md:mt-0">
-                            <button className="bg-golden-yellow hover:bg-amber-500 text-white px-4 py-1 rounded text-sm font-medium transition-colors">
-                              Contact Vendor
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                        </Link>
                     </div>
                   ))}
                 </div>
